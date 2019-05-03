@@ -6,13 +6,19 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import com.catatanjalu.korean.R
+import com.catatanjalu.korean.model.Dashboard
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private val dashboardList = mutableListOf<Dashboard>()
+    private val dashboardAdapter = DashboardAdapter(dashboardList, this::onClick)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,11 +27,12 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         initView()
     }
 
+
     private fun initView() {
         setSupportActionBar(toolbar)
 
         val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -36,6 +43,58 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        title = "Home"
+        getData()
+
+        rvDashboard.run {
+            layoutManager = LinearLayoutManager(this@DashboardActivity)
+            adapter = dashboardAdapter
+        }
+    }
+
+    private fun getData() {
+        val image = listOf(
+            R.drawable.game,
+            R.drawable.gif,
+            R.drawable.keyboard,
+            R.drawable.lyric,
+            R.drawable.music,
+            R.drawable.sticker,
+            R.drawable.video,
+            R.drawable.wallpaper
+        )
+
+        val title = listOf(
+            "Game",
+            "Gif",
+            "Keyboard",
+            "Lyric",
+            "Music",
+            "Sticker",
+            "Video",
+            "Wallpaper"
+        )
+
+        val desc = listOf(
+            "Guest the name of song",
+            "Animated Twice's pictures",
+            "Beautiful keyboard wallpaper",
+            "Lyric song of Twice",
+            "Enjoy all Twice's Songs",
+            "Twice sticker & emoticon",
+            "Video related to Twice",
+            "HD wallpaper for your smartphone"
+        )
+
+        (0..7).forEach {
+            val data = Dashboard(image[it], title[it], desc[it])
+            dashboardList.add(data)
+        }
+    }
+
+    private fun onClick(dashboard: Dashboard) {
+
     }
 
     override fun onBackPressed() {
@@ -59,7 +118,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
 
